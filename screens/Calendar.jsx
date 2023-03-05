@@ -14,23 +14,25 @@ const CalendarSchedule = ({ route, navigation }) => {
         return moment(date, "DD.MM.YYYY");
       });
     };
-    const maxWorkingdDay = () => {
-      return workingDays.map((date) => {
-        return moment(date, "DD.MM.YYYY");
-      });
-    };
     const generateWorkTime = () => {
       let maxDay = moment.max(maxWeekendDay());
-      let workingDays = [];
+      let workingDaysArr = [];
+
+      workingDays.map((date) => {
+        workingDaysArr.push(moment(date, "DD.MM.YYYY").format("YYYY-MM-DD"));
+      });
+
       while (true) {
-        workingDays.push(maxDay.clone().add(1, "d").format("YYYY-MM-DD"));
-        workingDays.push(maxDay.clone().add(2, "d").format("YYYY-MM-DD"));
-        maxDay.add(4, "d");
+        for (let i = 0; i < workingDays.length; i++) {
+          maxDay.add(1, "d");
+          workingDaysArr.push(maxDay.clone().format("YYYY-MM-DD"));
+        }
+        maxDay.add(weekendDays.length, "d");
         if (moment().year() !== maxDay.year()) {
           break;
         }
       }
-      setWorkDays(workingDays);
+      setWorkDays(workingDaysArr);
     };
     generateWorkTime();
   }, []);

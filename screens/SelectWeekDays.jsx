@@ -77,6 +77,7 @@ const Week = ({ route, navigation }) => {
   for (let i = 0; weekdays.length > i; i++) {
     daysOfWeek[i] = `${new Date().GetDayOfWeek(i + 1)}`;
   }
+
   return (
     <View style={{ alignContent: "flex-start" }}>
       {weekdays.map((item, index) => {
