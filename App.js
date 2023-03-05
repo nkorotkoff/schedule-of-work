@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Week from "./screens/week";
+import Week from "./screens/SelectWeekDays";
+import WorkSchedule from "./screens/WorkSchedul";
+import CalendarSchedule from "./screens/Calendar";
 
 const Stack = createNativeStackNavigator();
 
@@ -9,10 +11,12 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Выбор графика" component={Week} />
+        <Stack.Screen name="Выбор графика" component={WorkSchedule} />
+        <Stack.Screen name="Выбор даты" component={Week} />
+        <Stack.Screen name="График работы" component={CalendarSchedule} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default Week;
+export default App;

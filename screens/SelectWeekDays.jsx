@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Button } from "react-native";
 
-const Week = () => {
+const Week = ({ route, navigation }) => {
   const [workingDays, setWorkingDays] = useState([]);
   const [freeDays, setFreeDays] = useState([]);
+  const { workDays, weekendDays } = route.params;
   const setUpDays = (index) => {
     setUpFreeDays(index);
     if (workingDays.includes(index)) {
@@ -11,7 +12,7 @@ const Week = () => {
         return item !== index;
       });
       setWorkingDays(filteredDays);
-    } else if (workingDays.length < 2) {
+    } else if (workingDays.length < workDays && !freeDays.includes(index)) {
       setWorkingDays([...workingDays, index]);
       if (freeDays.includes(index)) {
         const filteredDays = freeDays.filter((item) => {
@@ -22,7 +23,7 @@ const Week = () => {
     }
   };
   setUpFreeDays = (index) => {
-    if (workingDays.length === 2) {
+    if (workingDays.length === workDays || freeDays.length > 0) {
       if (freeDays.includes(index)) {
         const filteredDays = freeDays.filter((item) => {
           return item !== index;
@@ -30,8 +31,9 @@ const Week = () => {
         setFreeDays(filteredDays);
       } else if (
         !freeDays.includes(index) &&
-        freeDays.length < 2 &&
-        !workingDays.includes(index)
+        freeDays.length < weekendDays &&
+        !workingDays.includes(index) &&
+        workingDays.length === workDays
       ) {
         setFreeDays([...freeDays, index]);
       }
@@ -45,6 +47,16 @@ const Week = () => {
       return "green";
     }
     return "darkturquoise";
+  };
+  const saveParams = () => {
+    navigation.navigate("График работы", {
+      weekendDays: freeDays.map((index) => {
+        return daysOfWeek[index];
+      }),
+      workingDays: workingDays.map((index) => {
+        return daysOfWeek[index];
+      }),
+    });
   };
   const weekdays = [
     "Понедельник",
@@ -66,7 +78,7 @@ const Week = () => {
     daysOfWeek[i] = `${new Date().GetDayOfWeek(i + 1)}`;
   }
   return (
-    <View style={{ alignContent: "flex-start", marginTop: 50 }}>
+    <View style={{ alignContent: "flex-start" }}>
       {weekdays.map((item, index) => {
         return (
           <Pressable
@@ -75,7 +87,10 @@ const Week = () => {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: setUpColor(index),
-              height: "14.33%",
+              height:
+                workingDays.length + freeDays.length === workDays + weekendDays
+                  ? "13.6%"
+                  : "14.3%",
               borderBottomWidth: 2,
               borderStyle: "solid",
               borderBottomColor: "lightgrey ",
@@ -90,6 +105,15 @@ const Week = () => {
           </Pressable>
         );
       })}
+      {workingDays.length + freeDays.length === workDays + weekendDays && (
+        <Button
+          style={{
+            height: "5%",
+          }}
+          onPress={() => saveParams()}
+          title="Сохранить"
+        />
+      )}
     </View>
   );
 };
