@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "first-app",
+    "name": "Заводской график",
     "slug": "first-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.nkorotkoff.firstapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2adbf19a-add8-405e-bd57-173aa025a59d"
+      }
     }
   }
 }

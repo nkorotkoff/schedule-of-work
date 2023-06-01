@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Pressable, Button } from "react-native";
 const Week = ({ route, navigation }) => {
   const [workingDays, setWorkingDays] = useState([]);
   const [freeDays, setFreeDays] = useState([]);
-  const { workDays, weekendDays } = route.params;
+  const { workDays, weekendDays, graphic } = route.params;
   const setUpDays = (index) => {
     setUpFreeDays(index);
     if (workingDays.includes(index)) {
@@ -56,6 +56,7 @@ const Week = ({ route, navigation }) => {
       workingDays: workingDays.map((index) => {
         return daysOfWeek[index];
       }),
+      graphic,
     });
   };
   const weekdays = [

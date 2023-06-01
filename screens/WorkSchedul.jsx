@@ -1,9 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WorkSchedule = ({ navigation }) => {
   const [workDays, setWorkDays] = useState("");
   const [weekendDays, setWeekendDays] = useState("");
+  const [graphic, setGraphic] = useState("");
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("graphic");
+        if (value !== null) {
+          navigation.navigate("График работы", {
+            value: JSON.parse(value),
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  });
 
   const handleWorkDaysChange = (value) => {
     if (value < 6 && value !== "") {
@@ -51,10 +69,25 @@ const WorkSchedule = ({ navigation }) => {
     }
   };
   const saveParams = () => {
-    navigation.navigate("Выбор даты", {
-      workDays,
-      weekendDays,
-    });
+    if (workDays !== "" && weekendDays !== "") {
+      navigation.navigate("Выбор даты", {
+        workDays,
+        weekendDays,
+        graphic,
+      });
+    } else {
+      Alert.alert(
+        "Неправильно выбраны дни",
+        "Рабочие и выходные должны быть заполнены"
+      );
+    }
+  };
+  const setUpDayOrNight = (value) => {
+    if (value === graphic) {
+      setGraphic("");
+    } else {
+      setGraphic(value);
+    }
   };
   return (
     <View style={styles.container}>
@@ -72,6 +105,25 @@ const WorkSchedule = ({ navigation }) => {
         onChangeText={handleWeekendDaysChange}
         value={weekendDays.toString()}
       />
+      <View
+        style={{
+          justifyContent: "space-evenly",
+          flexDirection: "row",
+          gap: 150,
+          marginBottom: 50,
+        }}
+      >
+        <Button
+          color={graphic === "Ночная" ? "green" : ""}
+          onPress={() => setUpDayOrNight("Ночная")}
+          title="Ночная"
+        />
+        <Button
+          color={graphic === "Дневная" ? "green" : ""}
+          onPress={() => setUpDayOrNight("Дневная")}
+          title="Дневная"
+        />
+      </View>
       <Button onPress={() => saveParams()} title="Сохранить" />
     </View>
   );
